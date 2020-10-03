@@ -8,12 +8,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using ParkingWeb.services.Interfaces;
+using ParkingWeb.Enums;
 
 namespace ParkingWeb.services
 {
     public class TokenService : ITokenService
     {
-
         private readonly string _issuer;
         private readonly string _audience;
         private readonly int _seconds;
@@ -27,7 +27,7 @@ namespace ParkingWeb.services
             _key = configuration.GetValue<string>("TokenConfiguration:Secret");
         }
 
-        public string GetToken(ApplicationUser user)
+        public string GetToken(ApplicationUser user, PolicyType policyType)
         {
             var handler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_key);
@@ -37,6 +37,7 @@ namespace ParkingWeb.services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Id.ToString()),
+                new Claim("scope", policyType.ToString()),
                 new Claim("CreateAt", expireDate.ToString())
             };
 

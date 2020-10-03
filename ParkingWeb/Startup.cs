@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ParkingWeb.Extensions;
 using ParkingWeb.Extensions.IOC;
 
 namespace ParkingWeb
@@ -29,7 +30,7 @@ namespace ParkingWeb
                 .AddDefaultTokenProviders();
 
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("test"));
-            services.RepositoryIOC().ServiceIOC();
+            services.RepositoryIOC().ServiceIOC().TokenConfiguration(this.Configuration);
             services.AddMvc();
             services.AddHttpContextAccessor();
             services.AddCors(options =>
