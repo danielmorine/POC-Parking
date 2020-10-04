@@ -13,6 +13,7 @@ namespace ParkingWeb.Extensions.IOC
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IRegisterService, RegisterService>();
             services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IParkingService, ParkingService>();
             return services;
         }
     }

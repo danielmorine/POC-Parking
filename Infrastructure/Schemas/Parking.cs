@@ -6,9 +6,9 @@ namespace Infrastructure.Schemas
 {
     public class Parking : ISchema<Guid>
     {
-        [NotMapped]
-        public Guid ID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Guid ID { get; set; }
 
+        [NotMapped]
         public DateTimeOffset CreatedDate { get; set; }
 
         public Guid CompanyID { get; set; }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using ParkingWeb.Extensions;
 using ParkingWeb.Extensions.IOC;
+using System;
 using System.Linq;
 
 namespace ParkingWeb
@@ -23,7 +24,7 @@ namespace ParkingWeb
         }
 
         public IConfiguration Configuration { get; }
-        public UserManager<ApplicationUser> UserManager {get;set;}
+        public UserManager<ApplicationUser> UserManager { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -55,7 +56,7 @@ namespace ParkingWeb
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
-            });           
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -76,25 +77,52 @@ namespace ParkingWeb
             {
                 endpoints.MapControllers();
             });
-            
+
             using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             if (context.Database.EnsureCreated())
-            {               
-                    var roles = RoleScript.Roles();
-                    var user = AdministratorScript.ApplicationUser();
-                    var userRole = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("ADMINISTRATOR")), user);
-                    var types = TypeScript.GetTypes();
+            {
+                var roles = RoleScript.Roles();
+                var admin = AdministratorScript.ApplicationUser();
+                var adminUser = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("ADMINISTRATOR")), admin);
+                var types = TypeScript.GetTypes();
+                var company = CompanyScript.GetCompany();
+                var user = UserScript.ApplicationUser();
+                var userRole = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("USER")), user);
+                var vehiclesList = VehicleScript.GetVehicles();
 
-                    context.Roles.AddRangeAsync(roles).Wait();
-                    context.SaveChangesAsync().Wait();
+                context.Roles.AddRangeAsync(roles).Wait();
+                context.SaveChangesAsync().Wait();
 
-                    context.ApplicationUser.Add(user);
-                                     
-                    context.UserRoles.Add(userRole);
-                    context.SaveChangesAsync().Wait();
+                context.ApplicationUser.Add(admin);
 
-                    context.Type.AddRangeAsync(types).Wait();                
+                context.UserRoles.Add(adminUser);
+                context.SaveChangesAsync().Wait();
+
+                context.Type.AddRangeAsync(types).Wait();
+
+                context.Company.Add(company);
+                context.SaveChangesAsync().Wait();
+
+                context.ApplicationUser.Add(user);
+                context.SaveChangesAsync().Wait();
+
+                context.UserRoles.Add(userRole);
+                context.SaveChangesAsync().Wait();
+
+                context.Vehicles.AddRangeAsync(vehiclesList).Wait();
+                context.SaveChangesAsync();
+
+                context.UserCompany.Add(new UserCompany { CompanyID = company.ID, UserID = user.Id });
+                context.SaveChangesAsync().Wait();
+
+                foreach (var value in vehiclesList)
+                {
+                    context.Parking.Add(new Parking { CompanyID = value.CompanyID, CreatedDate = value.CreatedDate, ID = Guid.NewGuid(), StartDate = DateTimeOffset.UtcNow, VehicleID = value.ID });
+                }
+
+                context.SaveChangesAsync().Wait();
+
             }
         }
     }

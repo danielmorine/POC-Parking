@@ -1,12 +1,11 @@
-﻿using Infrastructure.Schemas;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Infrastructure.Script
 {
     public static class TypeScript
     {
-        public static new List<Schemas.Type>  GetTypes()
+        public static List<Schemas.Type>  GetTypes()
         {
             return new List<Schemas.Type>
             {
