@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using ParkingWeb.Extensions;
 using ParkingWeb.Extensions.IOC;
 using System;
@@ -28,6 +30,7 @@ namespace ParkingWeb
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("test"));
@@ -60,12 +63,13 @@ namespace ParkingWeb
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
+        {            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+           
             app.UseHttpsRedirection();
 
             app.UseRouting();
