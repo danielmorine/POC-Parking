@@ -46,11 +46,7 @@ namespace ParkingWeb
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
-            });
-
-            services.Configure<PasswordHasherOptions>(options =>
-                options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
-            );
+            });           
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -71,15 +67,11 @@ namespace ParkingWeb
             {
                 endpoints.MapControllers();
             });
-
             
-
             using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             if (context.Database.EnsureCreated())
-            {
-                try
-                {
+            {               
                     var roles = RoleScript.Roles();
                     var user = AdministratorScript.ApplicationUser();
                     var userRole = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("ADMINISTRATOR")), user);
@@ -88,20 +80,9 @@ namespace ParkingWeb
                     context.SaveChangesAsync().Wait();
 
                     context.ApplicationUser.Add(user);
-
-                    //using var scope2 = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-                    //using var service = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-                    //service.CreateAsync(user, user.PasswordHash);
-                    
+                                     
                     context.UserRoles.Add(userRole);
-                    context.SaveChangesAsync().Wait();
-                }
-                catch (Exception ex)
-                {
-
-                    throw;
-                }
+                    context.SaveChangesAsync().Wait();                
             }
         }
     }

@@ -45,9 +45,9 @@ namespace ParkingWeb.Extensions
 
             services.AddAuthorization(auth =>
             {
-                var bearerRequirement = new BearerRequirement(tokenConfiguration, signingCredentials, configuration);
-                var administratorRequirement = new AdministratorRequirement(tokenConfiguration, signingCredentials, configuration);
-                var userRequirement = new UserRequiriment(tokenConfiguration, signingCredentials, configuration);
+                var bearerRequirement = new BearerRequirement(configuration);
+                var administratorRequirement = new AdministratorRequirement(configuration);
+                var userRequirement = new UserRequiriment(configuration);
 
                 var bearerAuthorization = new AuthorizationPolicyBuilder()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
