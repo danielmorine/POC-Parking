@@ -88,6 +88,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
   * Você pode escolher entre dois tipos de typeID (1 ou 2).
   	** TypeID 1 = Carro;
 	** TypeID 2 = Moto;
+  * Placa com 8 caracteres
 
 Exemplo de Body:
   
