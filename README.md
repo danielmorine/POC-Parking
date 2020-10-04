@@ -7,6 +7,14 @@ Projeto WebAPI em Asp.net Core 3.1
 
 * Swagger
 
+## Como executar
+
+* Faça o clone para máquina local;
+
+* Execute o projeto selecionando o ParkingWeb como projeto de inicialização.
+
+		Em caso de sucesso aparecerá o swagger da aplicação exibindo todos os endpoints
+
 ## Informações
 * O projeto conta com duas Policy: "ADMINISTRATOR" e "USER";
 
@@ -33,7 +41,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
 	"password" : "Teste@123"
 }
 
-    Em caso de sucesso, será retornado um token.
+    Em caso de sucesso será retornado um token.
 
 ### Como preencher o Header da Requisição
   Key: Authorization
@@ -53,7 +61,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
 	 "qtdCars" : 100
   }
   
-    Em caso de sucesso, será retornado Status 200.
+    Em caso de sucesso será retornado Status 200.
   
   Além disso, o usuário com policy de administrator pode ainda: Editar um estabelecimento, Buscar todos os estabelecimentos e Deletar caso ainda não esteja em uso.
   
@@ -68,7 +76,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
 		 "password" : "Teste@123"
   }
   
-    Em caso de sucesso, será retornado Status 200.
+    Em caso de sucesso será retornado Status 200.
   
 ### Cadastro de veículos
 
@@ -89,7 +97,7 @@ Exemplo de Body:
 		"typeID" : 1
 }
 
-    Em caso de sucesso, será retornado Status 200.
+    Em caso de sucesso será retornado Status 200.
     
   Além disso, é possível listar todos os veículos, editar e apagar caso ainda não esteja sendo usado.
   
@@ -110,7 +118,7 @@ Exemplo de Body:
 	"plate" : "zty-5424"
 }
 
-    Em caso de sucesso, será retornado Status 200.
+    Em caso de sucesso será retornado Status 200.
     
     
    ### Saída de Veículos
@@ -127,7 +135,7 @@ Enviar um body usando o verbo PUT.
 	"plate" : "zty-5424"
 }
 
-    Em caso de sucesso, será retornado Status 200.
+    Em caso de sucesso será retornado Status 200.
 
 
 
