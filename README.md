@@ -20,6 +20,11 @@ Projeto WebAPI em Asp.net Core 3.1
 
 * Senha default: Teste@123
 
+* Todos os Métodos do verbo GET, possui o final do endPoint: /format.{format}, você pode optar receber os dados em formato json ou xml, Exemplo:
+			
+			/api/v1/company/getall/format.json
+			
+			/api/v1/company/getall/format.xml
 ### Autenticação
 Enviar um body do tipo JSON com o método POST na controller Login, com os seguintes campos: email e password.
 
@@ -65,7 +70,28 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
   
     Em caso de sucesso, será retornar Status 200.
   
-Cadastro de veículos
+### Cadastro de veículos
+
+  Para criar um novo veículo, necessário estar autenticado com o usuário com policy user.
+  
+  #### Importante
+  * Você pode escolher entre dois tipos de typeID (1 ou 2).
+  	** TypeID 1 = Carro;
+	** TypeID 2 = Moto;
+
+Exemplo de Body:
+  
+ {
+		"make" : "Marca",
+		"model" : "Modelo",
+		"color" :"Cor",
+		"plate" : "zty-1353",
+		"typeID" : 1
+}
+
+    Em caso de sucesso, será retornar Status 200.
+    
+  Além disso, é possível listar todos os veículos, editar e apagar caso ainda não esteja sendo usado.
 
 
 
