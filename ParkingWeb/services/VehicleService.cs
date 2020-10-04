@@ -29,6 +29,11 @@ namespace ParkingWeb.services
         {
             await ValidateUpdate(model, userID);
 
+            if (model.TypeID != 1 && model.TypeID != 2)
+            {
+                throw new CustomExceptions("Tipo do veículo incorreto");
+            }
+
             var vehicle = await _vehicleRepository.FirstOrDefaultAsync(x => x.Plate.Equals(model.Plate));
 
             vehicle.Color = string.IsNullOrEmpty(model.Color) ? vehicle.Color : model.Color;
@@ -41,7 +46,7 @@ namespace ParkingWeb.services
         public async Task DeleteAsync(string plate, Guid userID)
         {
             await ValidatePlate(plate, userID);
-
+           
             var vehicle = await _vehicleRepository.FirstOrDefaultAsync(x => x.Plate.Equals(plate));
 
             if (await _parkingRepository.AnyAsync(x => x.VehicleID == vehicle.ID))
@@ -121,6 +126,9 @@ namespace ParkingWeb.services
             if (model == null)
             {
                 throw new CustomExceptions("É necessário preencher todos os campos");
+            }  else if (model.TypeID != 1 && model.TypeID != 2)
+            {
+                throw new CustomExceptions("Tipo do veículo incorreto");
             }
 
             StringHelper.StringNullOrEmpty(model.Color);
