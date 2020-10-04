@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using ParkingWeb.Extensions;
 using ParkingWeb.Extensions.IOC;
 using System.Linq;
@@ -36,7 +37,16 @@ namespace ParkingWeb
 
 
             services.RepositoryIOC().ServiceIOC().TokenConfiguration(this.Configuration);
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.FormatterMappings.SetMediaTypeMappingForFormat
+                    ("xml", MediaTypeHeaderValue.Parse("application/xml"));
+                options.FormatterMappings.SetMediaTypeMappingForFormat
+                    ("config", MediaTypeHeaderValue.Parse("application/xml"));
+                options.FormatterMappings.SetMediaTypeMappingForFormat
+                    ("js", MediaTypeHeaderValue.Parse("application/json"));
+            }).AddXmlSerializerFormatters();
+
             services.AddHttpContextAccessor();
             services.AddCors(options =>
             {

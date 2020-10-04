@@ -37,7 +37,7 @@ namespace ParkingWeb.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("format.{format}"), FormatFilter]
         [Authorize(Policy = "UserBearer")]
         public async Task<IActionResult> GetAsync()
         {

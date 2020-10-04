@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace ParkingWeb.Controllers
 {
@@ -9,7 +10,7 @@ namespace ParkingWeb.Controllers
 
     public class TestController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("format.{format}"), FormatFilter]
         public async Task<IActionResult> Get()
         {
             return Ok("OK");
