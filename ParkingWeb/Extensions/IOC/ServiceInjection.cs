@@ -11,6 +11,7 @@ namespace ParkingWeb.Extensions.IOC
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IRegisterService, RegisterService>();
             return services;
         }
     }
