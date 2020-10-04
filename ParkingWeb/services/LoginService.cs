@@ -1,4 +1,5 @@
-﻿using Infrastructure.Schemas;
+﻿using Infrastructure.Helpers;
+using Infrastructure.Schemas;
 using Microsoft.AspNetCore.Identity;
 using ParkingWeb.Enums;
 using ParkingWeb.Exceptions;
@@ -27,12 +28,12 @@ namespace ParkingWeb.services
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, true);
 
-            if (result == null)
+            if (!result.Succeeded)
             {
                 throw new CustomExceptions("Email ou senha inválida");
             }
-            
             var user = await _userManager.FindByEmailAsync(model.Email);
+
             var role = (await _userManager.GetRolesAsync(user))
                     .FirstOrDefault(x => x.Equals(PolicyType.ADMINISTRATOR.ToString()) ||
                     x.Equals(PolicyType.USER.ToString()));

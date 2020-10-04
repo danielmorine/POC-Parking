@@ -7,7 +7,7 @@ namespace Infrastructure.Schemas
     public class UserCompany : ISchema<Guid>
     {
         public Guid CompanyID { get; set; }
-        public Guid UserID { get; set; }
+        public string UserID { get; set; }
 
         [NotMapped]
         public Guid ID { get; set; }

@@ -1,11 +1,12 @@
-﻿using ParkingWeb.Configurations;
+﻿using Microsoft.Extensions.Configuration;
+using ParkingWeb.Configurations;
 using ParkingWeb.Enums;
 
 namespace ParkingWeb.Requirements
 {
     public class UserRequiriment : BaseRequirement
     {
-        public UserRequiriment(TokenConfiguration tokenConfiguration, SigningConfiguration signingConfiguration) : base(tokenConfiguration, signingConfiguration) { }
+        public UserRequiriment(TokenConfiguration tokenConfiguration, SigningConfiguration signingConfiguration, IConfiguration configuration) : base(tokenConfiguration, signingConfiguration, configuration) { }
         protected override PolicyType PolicyType
         {
             get

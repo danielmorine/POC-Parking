@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using ParkingWeb.Configurations;
 using ParkingWeb.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ParkingWeb.Requirements
@@ -16,16 +18,19 @@ namespace ParkingWeb.Requirements
         private readonly TokenValidationParameters _tokenValidationParameters;
         protected abstract PolicyType PolicyType { get; }
 
-        public BaseRequirement(TokenConfiguration tokenconfiguration, SigningConfiguration signingConfigurations)
+        public BaseRequirement(TokenConfiguration tokenconfiguration, SigningConfiguration signingConfigurations, IConfiguration configuration)
         {
             _tokenValidationParameters = new TokenValidationParameters()
             {
-                ValidIssuer = tokenconfiguration.Issuer,
-                ValidAudience = tokenconfiguration.Audience,
-                IssuerSigningKey = signingConfigurations.Key,
+                ValidateIssuer = true,
+                ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.
+                ASCII.GetBytes(configuration["TokenConfiguration:Secret"])),
+                ValidAudience = configuration["TokenConfiguration:Audience"],
+                ValidIssuer = configuration["TokenConfiguration:Issuer"]
             };
         }
 
@@ -35,8 +40,8 @@ namespace ParkingWeb.Requirements
             {
                 if (context.User.Identity.IsAuthenticated)
                 {
-                    if (!context.User.HasClaim(x => x.Value.Equals(this.PolicyType.ToString())) || !TokenIsValid(context))
-                    {
+                    if (!context.User.HasClaim(x => x.Value.Equals(this.PolicyType.ToString())))
+                    {                        
                         context.Fail();
                         return;
                     }
@@ -66,7 +71,7 @@ namespace ParkingWeb.Requirements
         private string GetToken(AuthorizationHandlerContext context)
         {
             var @dynamic = (dynamic)context.Resource;
-            @dynamic = @dynamic.HttpContext.Request.headers;
+            return @dynamic.Metadata.HttpContext;
 
             var json = JsonConvert.SerializeObject(dynamic);
             CustomHeader headers = JsonConvert.DeserializeObject<CustomHeader>(json);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using ParkingWeb.Configurations;
 using ParkingWeb.Enums;
 using System;
@@ -10,7 +11,7 @@ namespace ParkingWeb.Requirements
 {
     public class BearerRequirement : BaseRequirement
     {
-        public BearerRequirement(TokenConfiguration tokenConfiguration, SigningConfiguration signingConfiguration) : base(tokenConfiguration, signingConfiguration) { }
+        public BearerRequirement(TokenConfiguration tokenConfiguration, SigningConfiguration signingConfiguration, IConfiguration configuration) : base(tokenConfiguration, signingConfiguration, configuration) { }
 
         protected override PolicyType PolicyType
         {

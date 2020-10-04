@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using ParkingWeb.Configurations;
 using ParkingWeb.Requirements;
 using System;
+using System.Text;
 
 namespace ParkingWeb.Extensions
 {
@@ -31,7 +33,8 @@ namespace ParkingWeb.Extensions
             .AddJwtBearer(bearerOpt => 
             {
                 var paramsValidation = bearerOpt.TokenValidationParameters;
-                paramsValidation.IssuerSigningKey = signingCredentials.Key;
+                paramsValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.
+                ASCII.GetBytes(configuration["TokenConfiguration:Secret"]));
                 paramsValidation.ValidAudience = tokenConfiguration.Audience;
                 paramsValidation.ValidIssuer = tokenConfiguration.Issuer;
                 paramsValidation.ValidateIssuerSigningKey = true;
@@ -42,9 +45,9 @@ namespace ParkingWeb.Extensions
 
             services.AddAuthorization(auth =>
             {
-                var bearerRequirement = new BearerRequirement(tokenConfiguration, signingCredentials);
-                var administratorRequirement = new AdministratorRequirement(tokenConfiguration, signingCredentials);
-                var userRequirement = new UserRequiriment(tokenConfiguration, signingCredentials);
+                var bearerRequirement = new BearerRequirement(tokenConfiguration, signingCredentials, configuration);
+                var administratorRequirement = new AdministratorRequirement(tokenConfiguration, signingCredentials, configuration);
+                var userRequirement = new UserRequiriment(tokenConfiguration, signingCredentials, configuration);
 
                 var bearerAuthorization = new AuthorizationPolicyBuilder()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)

@@ -9,6 +9,7 @@ namespace ParkingWeb.Extensions.IOC
         public static IServiceCollection ServiceIOC(this IServiceCollection services)
         {
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ILoginService, LoginService>();
             return services;
         }
     }

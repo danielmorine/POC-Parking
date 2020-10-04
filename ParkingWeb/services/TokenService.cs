@@ -42,13 +42,13 @@ namespace ParkingWeb.services
             };
 
             var securityToken = new JwtSecurityToken(
-                    issuer: _issuer,
-                    audience: _audience,
-                    expires: DateTime.UtcNow.AddSeconds(_seconds),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature),
-                    claims: claims
-                );
+                 issuer: _issuer,
+                 audience: _audience,
+                 expires: DateTime.UtcNow.AddSeconds(_seconds),
+                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
+                 SecurityAlgorithms.HmacSha256Signature),
+                 claims: claims
+               );
             return handler.WriteToken(securityToken);
         }
     }

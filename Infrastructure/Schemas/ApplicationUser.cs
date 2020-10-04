@@ -16,6 +16,7 @@ namespace Infrastructure.Schemas
         [NotMapped]
         public string PasswordComparer { get; set; }
 
+
         public virtual ICollection<UserCompany> UserCompanies { get; set; } = new HashSet<UserCompany>();
 
     }
