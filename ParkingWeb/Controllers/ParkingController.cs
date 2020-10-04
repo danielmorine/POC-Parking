@@ -56,7 +56,25 @@ namespace ParkingWeb.Controllers
         }
 
         [HttpGet]
-        [HttpGet("getall/format.{format}"), FormatFilter]
+        [HttpGet("gettotals/format.{format}"), FormatFilter]
+        public async Task<IActionResult> GetTotalsAsync()
+        {
+            try
+            {
+                return Ok(await _parkingService.GetTotalsAsync(Guid.Parse(User.Identity.Name)));
+            }
+            catch (CustomExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [HttpGet("getAll/format.{format}"), FormatFilter]
         public async Task<IActionResult> GetAllAsync()
         {
             try

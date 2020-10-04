@@ -92,35 +92,21 @@ namespace ParkingWeb
                 var vehiclesList = VehicleScript.GetVehicles();
 
                 context.Roles.AddRangeAsync(roles).Wait();
-                context.SaveChangesAsync().Wait();
 
                 context.ApplicationUser.Add(admin);
 
                 context.UserRoles.Add(adminUser);
-                context.SaveChangesAsync().Wait();
 
                 context.Type.AddRangeAsync(types).Wait();
 
                 context.Company.Add(company);
-                context.SaveChangesAsync().Wait();
 
                 context.ApplicationUser.Add(user);
-                context.SaveChangesAsync().Wait();
 
                 context.UserRoles.Add(userRole);
-                context.SaveChangesAsync().Wait();
-
-                context.Vehicles.AddRangeAsync(vehiclesList).Wait();
-                context.SaveChangesAsync();
-
+                    
                 context.UserCompany.Add(new UserCompany { CompanyID = company.ID, UserID = user.Id });
-                context.SaveChangesAsync().Wait();
-
-                foreach (var value in vehiclesList)
-                {
-                    context.Parking.Add(new Parking { CompanyID = value.CompanyID, CreatedDate = value.CreatedDate, ID = Guid.NewGuid(), StartDate = DateTimeOffset.UtcNow, VehicleID = value.ID });
-                }
-
+             
                 context.SaveChangesAsync().Wait();
 
             }
