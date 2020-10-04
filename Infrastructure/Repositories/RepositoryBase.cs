@@ -36,9 +36,33 @@ namespace Infrastructure.Repositories
             return await _db.Set<T>().AsNoTracking().AnyAsync(predicate);
         }
 
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, params string[] includes)
+        {
+            var query = _db.Set<T>().AsQueryable();
+            if (includes != null)
+            {
+                for (int i = 0; i < includes.Length; i++)
+                    query = query.Include(includes[i]);
+            }
+
+            return await query.AsNoTracking().AnyAsync(predicate);
+        }
+
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
             return await _db.Set<T>().AsNoTracking().CountAsync(predicate);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate, params string[] includes)
+        {
+            var query = _db.Set<T>().AsQueryable();
+            if (includes != null)
+            {
+                for (int i = 0; i < includes.Length; i++)
+                    query = query.Include(includes[i]);
+            }
+
+            return await query.AsNoTracking().CountAsync(predicate);
         }
 
         public void Delete(T schema)

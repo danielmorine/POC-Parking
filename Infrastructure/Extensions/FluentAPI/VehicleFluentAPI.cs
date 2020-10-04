@@ -23,7 +23,7 @@ namespace Infrastructure.Extensions.FluentAPI
                 entity.Property(x => x.TypeID).IsRequired();
                 entity.Property(x => x.CompanyID).IsRequired();
 
-                entity.HasOne(x => x.Company).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.CompanyID).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(x => x.Company).WithMany(x => x.Vehicles).HasForeignKey(x => x.CompanyID).OnDelete(DeleteBehavior.Restrict);
 
             });
             return builder;

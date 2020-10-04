@@ -11,12 +11,13 @@ namespace Infrastructure.Schemas
         public string Name { get; set; }
         public string CNPJ { get; set; }
         public string Phone { get; set; }
+        public string Address { get; set; }
         public short QtdCars { get; set; }
         public short QtdMotorcycles { get; set; }
 
         public virtual ICollection<Parking> Parkings { get; set; } = new HashSet<Parking>();
 
-        public virtual Vehicle Vehicle { get; set; }
+        public virtual ICollection<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
 
         public virtual ICollection<UserCompany> UserCompanies { get; set; } = new HashSet<UserCompany>();
     }

@@ -21,7 +21,9 @@ namespace Infrastructure.Repositories.Interfaces
             params string[] inclues);
 
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, params string[] includes);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate);
+        Task<int> CountAsync(Expression<Func<T, bool>> predicate, params string[] includes);
 
         Task<T> AddAsync(T schema);
         Task AddRangeAsync(IEnumerable<T> schemas);
