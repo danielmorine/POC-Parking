@@ -28,17 +28,13 @@ namespace ParkingWeb.services
         public async Task UpdateAsync(VehicleUpdateModel model, Guid userID)
         {
             await ValidateUpdate(model, userID);
-
-            if (model.TypeID != 1 && model.TypeID != 2)
-            {
-                throw new CustomExceptions("Tipo do veículo incorreto");
-            }
-
+            
             var vehicle = await _vehicleRepository.FirstOrDefaultAsync(x => x.Plate.Equals(model.Plate));
 
             vehicle.Color = string.IsNullOrEmpty(model.Color) ? vehicle.Color : model.Color;
             vehicle.Make = string.IsNullOrEmpty(model.Make) ? vehicle.Make : model.Make;
             vehicle.Model = string.IsNullOrEmpty(model.Model) ? vehicle.Model : model.Model;
+            vehicle.TypeID = model.TypeID ?? vehicle.TypeID;
 
             await _vehicleRepository.SaveChangeAsync();
         }
@@ -62,7 +58,12 @@ namespace ParkingWeb.services
         public async Task AddAsync(VehicleModel model, Guid userID)
         {
             Validate(model);
-           
+
+            if (model.Plate.Length != 8)
+            {
+                throw new CustomExceptions("Formato invalido de placa, deve ter no máximo 8 caracteres");
+            }
+
             var company = await _userCompanyRepository.FirstOrDefaultAsync(x => x.UserID.Equals(userID.ToString()));
 
             if (await _vehicleRepository.AnyAsync(x => x.CompanyID == company.CompanyID && x.Plate.Equals(model.Plate)))
@@ -153,9 +154,9 @@ namespace ParkingWeb.services
             {
                 throw new CustomExceptions("Sem placa");
             }
-            else if (plate.Length != 7)
+            else if (plate.Length != 8)
             {
-                throw new CustomExceptions("Formato invalido de placa, deve ter no máximo 7 caracteres");
+                throw new CustomExceptions("Formato invalido de placa, deve ter no máximo 8 caracteres");
             }
 
             var company = await _userCompanyRepository.FirstOrDefaultAsync(x => x.UserID.Equals(userID.ToString()));

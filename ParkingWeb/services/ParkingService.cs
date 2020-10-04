@@ -5,6 +5,8 @@ using ParkingWeb.Exceptions;
 using ParkingWeb.Models.Parking;
 using ParkingWeb.services.Interfaces;
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ParkingWeb.services
@@ -61,7 +63,7 @@ namespace ParkingWeb.services
             await IsParked(parkModel.CompanyID, parkModel.VehicleID, true);
             await HasExceededLimit(parkModel.CompanyID, parkModel.TypeID, parkModel.QtdCars, parkModel.QtdMotorcycles);
 
-            await _parkingRepository.AddAsync(new Parking { ID = Guid.NewGuid(), CompanyID = parkModel.CompanyID, StartDate = DateTimeOffset.UtcNow, VehicleID = parkModel.VehicleID });
+            await _parkingRepository.AddAsync(new Parking { ID = Guid.NewGuid(), CompanyID = parkModel.CompanyID, StartDate = DateTimeOffset.UtcNow, VehicleID = parkModel.VehicleID, TypeID = parkModel.TypeID });
             await _parkingRepository.SaveChangeAsync();
 
         }
@@ -76,17 +78,21 @@ namespace ParkingWeb.services
         }
 
         private async Task HasExceededLimit(Guid companyID, byte typeID, short? qtdCars, short? qtdMotorcycles)
-        {
+        {            
             if (typeID == 1 && qtdCars.HasValue)
-            {
-                if ((await _parkingRepository.CountAsync(x => x.CompanyID == companyID && x.EndDate == null) + 1) > qtdCars.Value)
+            {                
+                var result = await _parkingRepository.CountAsync(x => x.TypeID == 1 && x.CompanyID == companyID && x.EndDate == null);
+
+                if ((result + 1) > qtdCars.Value)
                 {
                     throw new CustomExceptions("Limite de vagas de carros atingida");
                 }
             }
             else
             {
-                if (qtdMotorcycles.HasValue && (await _parkingRepository.CountAsync(x => x.CompanyID == companyID && x.EndDate == null) + 1) > qtdMotorcycles.Value)
+                var result = await _parkingRepository.CountAsync(x => x.TypeID == 2 && x.CompanyID == companyID && x.EndDate == null);
+
+                if (result + 1 > qtdMotorcycles.Value)
                 {
                     throw new CustomExceptions("Limite de vagas de mots atingida");
                 }
