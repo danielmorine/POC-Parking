@@ -22,6 +22,8 @@ Projeto WebAPI em Asp.net Core 3.1
 
 * Todas as controllers exigem autenticação;
 
+			Caso o usuário não esteja autenticado, será retornado status 401, caso esteja autenticado mas não tem a policy necessária para acessar o endpoint, será retornado 403
+
 * Policy administrator: admin@teste.com.br
 
 * Policy user: usuario@teste.com.br
