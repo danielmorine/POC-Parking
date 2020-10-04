@@ -53,7 +53,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
 	 "qtdCars" : 100
   }
   
-    Em caso de sucesso, será retornar Status 200.
+    Em caso de sucesso, será retornado Status 200.
   
   Além disso, o usuário com policy de administrator pode ainda: Editar um estabelecimento, Buscar todos os estabelecimentos e Deletar caso ainda não esteja em uso.
   
@@ -68,7 +68,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
 		 "password" : "Teste@123"
   }
   
-    Em caso de sucesso, será retornar Status 200.
+    Em caso de sucesso, será retornado Status 200.
   
 ### Cadastro de veículos
 
@@ -89,10 +89,45 @@ Exemplo de Body:
 		"typeID" : 1
 }
 
-    Em caso de sucesso, será retornar Status 200.
+    Em caso de sucesso, será retornado Status 200.
     
   Além disso, é possível listar todos os veículos, editar e apagar caso ainda não esteja sendo usado.
+  
+  ### Entrada de Veículos
+  
+  Para dar entrada de um veículo (carro ou moto), necessário estar autenticado com o usuário com policy user.
+  
+  #### Importante
+  
+  * O veículo precisa estar previamente cadastrado no estabelecimento (O id do usuário está vinculado a empresa);
+  * Não ter atingido a quantidade a capacidade máxima de veículos.
+  
+  Enviar um body no verbo POST contendo a placa do veículo
+  
+  Exemplo de Body:
+  
+{
+	"plate" : "zty-5424"
+}
 
+    Em caso de sucesso, será retornado Status 200.
+    
+    
+   ### Saída de Veículos
+   
+   #### Importante
+
+* É necessário ter dado entrada no veículo.
+
+Enviar um body usando o verbo PUT.
+
+  Exemplo de Body:
+  
+{
+	"plate" : "zty-5424"
+}
+
+    Em caso de sucesso, será retornado Status 200.
 
 
 
