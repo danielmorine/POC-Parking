@@ -139,6 +139,8 @@ Enviar um body usando o verbo PUT.
 }
 
     Em caso de sucesso será retornado Status 200.
+    
+  Além disso, você consegue gerar um relatório sintético de entrada e saída. (Consulta método Get na controller Parking) 
 
 
 
