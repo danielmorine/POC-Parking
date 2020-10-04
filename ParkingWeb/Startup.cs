@@ -31,6 +31,23 @@ namespace ParkingWeb
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddSwaggerGen(c => {
+
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "ESTACIONAMENTO",
+                        Version = "API V1",
+                        Description = "API REST criada com o ASP.NET Core 3.1 para controle de entrada e saída de veículos",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Daniel Haro",
+                            Url = new Uri("https://github.com/danielmorine")
+                        }
+                    });
+
+            });
+
             services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("test"));
@@ -69,7 +86,13 @@ namespace ParkingWeb
             {
                 app.UseDeveloperExceptionPage();
             }
-           
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();

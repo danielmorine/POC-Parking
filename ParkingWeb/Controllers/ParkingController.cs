@@ -55,7 +55,6 @@ namespace ParkingWeb.Controllers
             }
         }
 
-        [HttpGet]
         [HttpGet("gettotals/format.{format}"), FormatFilter]
         public async Task<IActionResult> GetTotalsAsync()
         {
@@ -73,7 +72,6 @@ namespace ParkingWeb.Controllers
             }
         }
 
-        [HttpGet]
         [HttpGet("getAll/format.{format}"), FormatFilter]
         public async Task<IActionResult> GetAllAsync()
         {
