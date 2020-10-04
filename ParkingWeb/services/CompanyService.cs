@@ -63,8 +63,8 @@ namespace ParkingWeb.services
                 ID = Guid.NewGuid(),
                 Name = model.Name,
                 Phone = model.Phone,
-                QtdCars = model.QtdCars ?? null,
-                QtdMotorcycles = model.QtdMotorcycles ?? null,                
+                QtdCars = model.QtdCars.Value,
+                QtdMotorcycles = model.QtdMotorcycles.Value,                
             });
 
             await _companyRepository.SaveChangeAsync();
@@ -152,6 +152,9 @@ namespace ParkingWeb.services
             if (model == null)
             {
                 throw new CustomExceptions("Verifique os campos informados");
+            } else if (!model.QtdCars.HasValue || !model.QtdMotorcycles.HasValue)
+            {
+                throw new CustomExceptions("É necessário informar a quantidade de carros e motos que o estabelecimento suporta");
             }
 
             model.CNPJ = ValidateCNPJ(model.CNPJ);

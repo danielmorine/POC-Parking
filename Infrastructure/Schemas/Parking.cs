@@ -15,6 +15,7 @@ namespace Infrastructure.Schemas
         public Guid VehicleID { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
+        public byte TypeID { get; set; }
 
         public virtual Company Company { get; set; }
         public virtual Vehicle Vehicle { get; set; }
