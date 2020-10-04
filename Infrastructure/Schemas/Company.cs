@@ -12,8 +12,8 @@ namespace Infrastructure.Schemas
         public string CNPJ { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
-        public short QtdCars { get; set; }
-        public short QtdMotorcycles { get; set; }
+        public short? QtdCars { get; set; }
+        public short? QtdMotorcycles { get; set; }
 
         public virtual ICollection<Parking> Parkings { get; set; } = new HashSet<Parking>();
 

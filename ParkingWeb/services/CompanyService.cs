@@ -1,4 +1,5 @@
-﻿using Infrastructure.Queries.Company;
+﻿using Infrastructure.Helpers;
+using Infrastructure.Queries.Company;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Schemas;
 using ParkingWeb.Enums;
@@ -6,6 +7,8 @@ using ParkingWeb.Exceptions;
 using ParkingWeb.Models.Company;
 using ParkingWeb.services.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ParkingWeb.services
@@ -25,36 +28,32 @@ namespace ParkingWeb.services
 
         public async Task DeleteAsync(string CNPJ)
         {
-            await ValidateDeleteAsync(CNPJ);
+            var cnpj =  ValidateCNPJ(CNPJ);
+            await ValidateDeleteAsync(cnpj);
 
-            _companyRepository.Delete(await _companyRepository.FirstOrDefaultAsync(x => x.CNPJ.Equals(CNPJ)));
+            _companyRepository.Delete(await _companyRepository.FirstOrDefaultAsync(x => x.CNPJ.Equals(cnpj)));
             await _companyRepository.SaveChangeAsync();
         }
 
-        public async Task<CompanyQuery> GetByIdAsync(string userID)
+        public async Task<IEnumerable<CompanyQuery>> GetAllAsync()
         {
-            if (Guid.Empty.Equals(userID))
-            {
-                throw new CustomExceptions("Não foi possível identificar o usuário");
-            }
-
-            var result = await _userCompanyRepository.FirstOrDefaultAsync(x => x.UserID == userID, false, new string[] { "Company" });
-
-            return new CompanyQuery
-            {
-                Address = result.Company.Address,
-                CNPJ = result.Company.CNPJ,
-                CreatedDate = result.Company.CreatedDate,
-                Name = result.Company.Name,
-                Phone = result.Company.Phone,
-                QtdCars = result.Company.QtdCars,
-                QtdMotorcycles = result.Company.QtdMotorcycles
+            Expression<Func<Company, bool>> expression = x => x.ID != null;
+            Expression<Func<Company, CompanyQuery>> selection = x => new CompanyQuery 
+            { 
+                Address = x.Address,
+                CNPJ = x.CNPJ,
+                CreatedDate = x.CreatedDate,
+                Name = x.Name,
+                Phone = x.Phone,
+                QtdCars = x.QtdCars,
+                QtdMotorcycles = x.QtdMotorcycles
             };
+            return await _companyRepository.GetAllAsync(expression, selection, false, int.MaxValue);
         }
 
         public async Task AddAsync(CompanyModel model)
         {
-            await ValidateAsync(model);
+            model = await ValidateAsync(model);
 
             await _companyRepository.AddAsync(new Company 
             { 
@@ -64,8 +63,8 @@ namespace ParkingWeb.services
                 ID = Guid.NewGuid(),
                 Name = model.Name,
                 Phone = model.Phone,
-                QtdCars = model.QtdCars.Value,
-                QtdMotorcycles = model.QtdMotorcycles.Value,                
+                QtdCars = model.QtdCars ?? null,
+                QtdMotorcycles = model.QtdMotorcycles ?? null,                
             });
 
             await _companyRepository.SaveChangeAsync();
@@ -73,8 +72,8 @@ namespace ParkingWeb.services
 
         public async Task UpdateAsync(CompanyModel model)
         {
-            await ValidateUpdateAsync(model);
-
+            model = await ValidateUpdateAsync(model);
+           
             var company = await _companyRepository.FirstOrDefaultAsync(x => x.CNPJ.Equals(model.CNPJ));
             
             company.Name = string.IsNullOrEmpty(model.Name) ? company.Name : model.Name;
@@ -129,28 +128,51 @@ namespace ParkingWeb.services
             return value;
         }
 
-        private async Task ValidateUpdateAsync(CompanyModel model)
+        private async Task<CompanyModel> ValidateUpdateAsync(CompanyModel model)
         {
             if (model == null)
             {
                 throw new CustomExceptions("Não foi possível atualizar este registro, verifique os dados informados");
-            } else if (!string.IsNullOrEmpty(model.CNPJ)  && !await _companyRepository.AnyAsync(x => x.CNPJ.Equals(model.CNPJ)))
+            } else if (string.IsNullOrEmpty(model.CNPJ))
             {
                 throw new CustomExceptions("Não foi possível encontrar o CNPJ informado");
             }
+
+            model.CNPJ = ValidateCNPJ(model.CNPJ);
+
+            if (!await _companyRepository.AnyAsync(x => x.CNPJ.Equals(model.CNPJ)))
+            {
+                throw new CustomExceptions("CNPJ não encontrado");
+            }
+            return model;
         }
 
-        private async Task ValidateAsync(CompanyModel model)
+        private async Task<CompanyModel> ValidateAsync(CompanyModel model)
         {
             if (model == null)
             {
                 throw new CustomExceptions("Verifique os campos informados");
-            } else if (await _companyRepository.AnyAsync(x => x.CNPJ.Equals(model.CNPJ)))
+            }
+
+            model.CNPJ = ValidateCNPJ(model.CNPJ);
+
+            if (await _companyRepository.AnyAsync(x => x.CNPJ.Equals(model.CNPJ)))
             {
                 throw new CustomExceptions("O CNPJ informado já está em uso");
             }
-
+            return model;
         }
         
+        private string ValidateCNPJ(string CNPJ)
+        {
+            var helper = new CNPJHelper();
+
+            if (string.IsNullOrEmpty(CNPJ) || !helper.IsCNPJ(CNPJ))
+            {
+                throw new CustomExceptions("CNPJ incorreto");
+            }
+
+            return helper.Clean(CNPJ);
+        }
     }
 }

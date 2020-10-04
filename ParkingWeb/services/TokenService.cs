@@ -36,7 +36,9 @@ namespace ParkingWeb.services
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Id.ToString()),
+                new Claim("name", user.Id.ToString()),
                 new Claim("scope", policyType.ToString()),
                 new Claim("CreateAt", expireDate.ToString())
             };

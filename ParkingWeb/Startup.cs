@@ -84,6 +84,7 @@ namespace ParkingWeb
                     var roles = RoleScript.Roles();
                     var user = AdministratorScript.ApplicationUser();
                     var userRole = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("ADMINISTRATOR")), user);
+                    var types = TypeScript.GetTypes();
 
                     context.Roles.AddRangeAsync(roles).Wait();
                     context.SaveChangesAsync().Wait();
@@ -91,7 +92,9 @@ namespace ParkingWeb
                     context.ApplicationUser.Add(user);
                                      
                     context.UserRoles.Add(userRole);
-                    context.SaveChangesAsync().Wait();                
+                    context.SaveChangesAsync().Wait();
+
+                    context.Type.AddRangeAsync(types).Wait();                
             }
         }
     }

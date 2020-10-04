@@ -17,6 +17,7 @@ namespace ParkingWeb.Extensions.IOC
             services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddScoped<IUserCompanyRepository, UserCompanyRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IUnitOfWork, Infrastructure.UnitOfWork>();
 
             return services;
         }

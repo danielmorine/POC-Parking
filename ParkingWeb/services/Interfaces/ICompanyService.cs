@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Queries.Company;
 using ParkingWeb.Models.Company;
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ParkingWeb.services.Interfaces
@@ -9,7 +9,7 @@ namespace ParkingWeb.services.Interfaces
     {
         Task AddAsync(CompanyModel model);
         Task UpdateAsync(CompanyModel model);
-        Task<CompanyQuery> GetByIdAsync(string userID);
         Task DeleteAsync(string CNPJ);
+        Task<IEnumerable<CompanyQuery>> GetAllAsync();
     }
 }

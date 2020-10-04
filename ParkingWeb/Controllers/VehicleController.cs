@@ -3,46 +3,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ParkingWeb.Exceptions;
-using ParkingWeb.Models.Company;
+using ParkingWeb.Models.Vehicle;
 using ParkingWeb.services.Interfaces;
 
 namespace ParkingWeb.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class CompanyController : ControllerBase
+    [Authorize(Policy = "UserBearer")]
+    public class VehicleController : ControllerBase
     {
-        private readonly ICompanyService _companyService;
+        private readonly IVehicleService _vehicleService;
 
-        public CompanyController(ICompanyService companyService)
+        public VehicleController(IVehicleService vehicleService)
         {
-            _companyService = companyService;
-        }
-
-        [HttpGet("getall/format.{format}"), FormatFilter]
-        [Authorize(Policy = "AdministratorBearer")]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            try
-            {
-                return Ok(await _companyService.GetAllAsync());
-            }
-            catch (CustomExceptions ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            _vehicleService = vehicleService;
         }
 
         [HttpPost]
-        [Authorize(Policy = "AdministratorBearer")]
-        public async Task<IActionResult> PostAsync([FromBody] CompanyModel model)
+        public async Task<IActionResult> PostAsync([FromBody] VehicleModel model)
         {
             try
             {
-                await _companyService.AddAsync(model);
+                await _vehicleService.AddAsync(model, Guid.Parse(User.Identity.Name));
                 return Ok();
             }
             catch (CustomExceptions ex)
@@ -54,14 +36,47 @@ namespace ParkingWeb.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
-        [HttpPut]
-        [Authorize(Policy = "AdministratorBearer")]
-        public async Task<IActionResult> PutAsync([FromBody] CompanyModel model)
+
+        [HttpGet("getall/format.{format}"), FormatFilter]
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                await _companyService.UpdateAsync(model);
+                return Ok(await _vehicleService.GetAllAsync(Guid.Parse(User.Identity.Name)));
+            }
+            catch (CustomExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("plate/{plate}/format.{format}"), FormatFilter]
+        public async Task<IActionResult> GetAsync([FromRoute] string plate)
+        {
+            try
+            {
+                return Ok(await _vehicleService.GetByPlateAsync(plate, Guid.Parse(User.Identity.Name)));
+            }
+            catch (CustomExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutAsync([FromBody] VehicleUpdateModel model)
+        {
+            try
+            {
+                await _vehicleService.UpdateAsync(model, Guid.Parse(User.Identity.Name));
                 return Ok();
             }
             catch (CustomExceptions ex)
@@ -75,13 +90,12 @@ namespace ParkingWeb.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{CNPJ}")]
-        [Authorize(Policy = "AdministratorBearer")]
-        public async Task<IActionResult> DeleteAsync([FromRoute] string CNPJ)
+        [Route("delete/{plate}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] string plate)
         {
             try
             {
-                await _companyService.DeleteAsync(CNPJ);
+                await _vehicleService.DeleteAsync(plate, Guid.Parse(User.Identity.Name));
                 return Ok();
             }
             catch (CustomExceptions ex)
