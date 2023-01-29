@@ -14,7 +14,7 @@ namespace Infrastructure.Extensions.FluentAPI
 
                 entity.HasKey(x => x.ID);
 
-                entity.Property(x => x.ID).HasColumnType($"{nameof(Type)}ID").IsRequired();
+                entity.Property(x => x.ID).HasColumnName($"{nameof(Type)}ID").IsRequired();
                 entity.Property(x => x.Name).HasColumnType("VARCHAR(10)").HasMaxLength(10).IsRequired();
                 
             });

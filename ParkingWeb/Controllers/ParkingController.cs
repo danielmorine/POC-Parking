@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ParkingWeb.Controllers
 {
     [Route("api/v1/[controller]")]
-    [Authorize(Policy = "UserBearer")]
+    [Authorize]
     public class ParkingController : ControllerBase
     {
         private readonly IParkingService _parkingService;

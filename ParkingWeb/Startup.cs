@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
@@ -38,7 +37,7 @@ namespace ParkingWeb
                     {
                         Title = "ESTACIONAMENTO",
                         Version = "API V1",
-                        Description = "API REST criada com o ASP.NET Core 3.1 para controle de entrada e saída de veículos",
+                        Description = "API REST criada com o ASP.NET Core 6.0 para controle de entrada e saída de veículos",
                         Contact = new OpenApiContact
                         {
                             Name = "Daniel Haro",
@@ -49,8 +48,8 @@ namespace ParkingWeb
             });
 
             services.AddControllers();
-
-            services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("test"));
+            services.AddDbContext<ApplicationDbContext>(
+                options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -103,40 +102,8 @@ namespace ParkingWeb
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            if (context.Database.EnsureCreated())
-            {
-                var roles = RoleScript.Roles();
-                var admin = AdministratorScript.ApplicationUser();
-                var adminUser = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("ADMINISTRATOR")), admin);
-                var types = TypeScript.GetTypes();
-                var company = CompanyScript.GetCompany();
-                var user = UserScript.ApplicationUser();
-                var userRole = UserRoleScript.UserRole(roles.FirstOrDefault(x => x.NormalizedName.Equals("USER")), user);
-                var vehiclesList = VehicleScript.GetVehicles();
-
-                context.Roles.AddRangeAsync(roles).Wait();
-
-                context.ApplicationUser.Add(admin);
-
-                context.UserRoles.Add(adminUser);
-
-                context.Type.AddRangeAsync(types).Wait();
-
-                context.Company.Add(company);
-
-                context.ApplicationUser.Add(user);
-
-                context.UserRoles.Add(userRole);
-                    
-                context.UserCompany.Add(new UserCompany { CompanyID = company.ID, UserID = user.Id });
-             
-                context.SaveChangesAsync().Wait();
-
-            }
+            });         
+            
         }
     }
 }

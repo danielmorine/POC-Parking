@@ -1,5 +1,4 @@
-﻿using Infrastructure.Helpers;
-using Infrastructure.Schemas;
+﻿using Infrastructure.Schemas;
 using Microsoft.AspNetCore.Identity;
 using ParkingWeb.Enums;
 using ParkingWeb.Exceptions;
@@ -34,14 +33,18 @@ namespace ParkingWeb.services
             }
             var user = await _userManager.FindByEmailAsync(model.Email);
 
-            var role = (await _userManager.GetRolesAsync(user))
-                    .FirstOrDefault(x => x.Equals(PolicyType.ADMINISTRATOR.ToString()) ||
-                    x.Equals(PolicyType.USER.ToString()));
+            return _tokenService.GetToken(user);
+        }
 
-            var type = (PolicyType)Enum.Parse(typeof(PolicyType), role);
+        public async Task CreateUserAsync(LoginModel model)
+        {
+            var applicationUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var result = await _userManager.CreateAsync(applicationUser, model.Password);
 
-            return _tokenService.GetToken(user, type);
-
+            if (!result.Succeeded)
+            {
+                throw new CustomExceptions("Não foi possível criar o usuário");
+            }
         }
     }
 }

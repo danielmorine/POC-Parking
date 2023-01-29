@@ -33,5 +33,23 @@ namespace ParkingWeb.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("create-user")]
+        public async Task<IActionResult> CreateUser([FromBody] LoginModel model)
+        {
+            try
+            {
+                await _loginService.CreateUserAsync(model);
+                return NoContent();
+            }
+            catch (CustomExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

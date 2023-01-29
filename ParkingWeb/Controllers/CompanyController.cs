@@ -9,6 +9,7 @@ using ParkingWeb.services.Interfaces;
 namespace ParkingWeb.Controllers
 {
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;
@@ -19,7 +20,6 @@ namespace ParkingWeb.Controllers
         }
 
         [HttpGet("getall/format.{format}"), FormatFilter]
-        [Authorize(Policy = "AdministratorBearer")]
         public async Task<IActionResult> GetAllAsync()
         {
             try
@@ -37,7 +37,6 @@ namespace ParkingWeb.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "AdministratorBearer")]
         public async Task<IActionResult> PostAsync([FromBody] CompanyModel model)
         {
             try
@@ -56,7 +55,6 @@ namespace ParkingWeb.Controllers
         }
         
         [HttpPut]
-        [Authorize(Policy = "AdministratorBearer")]
         public async Task<IActionResult> PutAsync([FromBody] CompanyModel model)
         {
             try
@@ -76,7 +74,6 @@ namespace ParkingWeb.Controllers
 
         [HttpDelete]
         [Route("delete/{CNPJ}")]
-        [Authorize(Policy = "AdministratorBearer")]
         public async Task<IActionResult> DeleteAsync([FromRoute] string CNPJ)
         {
             try

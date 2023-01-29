@@ -5,6 +5,6 @@ namespace ParkingWeb.services.Interfaces
 {
     public interface ITokenService
     {
-        string GetToken(ApplicationUser user, PolicyType policyType);
+        string GetToken(ApplicationUser user);
     }
 }

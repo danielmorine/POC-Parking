@@ -9,7 +9,7 @@ using ParkingWeb.services.Interfaces;
 namespace ParkingWeb.Controllers
 {
     [Route("api/v1/[controller]")]
-    [Authorize(Policy = "UserBearer")]
+    [Authorize]
     public class VehicleController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;

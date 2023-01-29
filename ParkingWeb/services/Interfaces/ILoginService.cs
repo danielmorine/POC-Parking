@@ -6,5 +6,6 @@ namespace ParkingWeb.services.Interfaces
     public interface ILoginService
     {
         Task<string> LoginAsync(LoginModel model);
+        Task CreateUserAsync(LoginModel model);
     }
 }

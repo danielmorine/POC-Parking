@@ -9,7 +9,7 @@ using ParkingWeb.services.Interfaces;
 namespace ParkingWeb.Controllers
 {
     [Route("api/v1/[controller]")]
-    [Authorize(Policy = "AdministratorBearer")]
+    [Authorize]
     
     public class RegisterController : ControllerBase
     {

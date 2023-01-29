@@ -27,7 +27,7 @@ namespace ParkingWeb.services
             _key = configuration.GetValue<string>("TokenConfiguration:Secret");
         }
 
-        public string GetToken(ApplicationUser user, PolicyType policyType)
+        public string GetToken(ApplicationUser user)
         {
             var handler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_key);
@@ -39,7 +39,6 @@ namespace ParkingWeb.services
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Id.ToString()),
                 new Claim("name", user.Id.ToString()),
-                new Claim("scope", policyType.ToString()),
                 new Claim("CreateAt", expireDate.ToString())
             };
 
