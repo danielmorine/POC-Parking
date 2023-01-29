@@ -15,20 +15,13 @@ Projeto WebAPI em Asp.net Core 6.0
 
 		Em caso de sucesso aparecerá o swagger da aplicação exibindo todos os endpoints
 
-## Informações
-* O projeto conta com duas Policy: "ADMINISTRATOR" e "USER";
 
 * JWT com duração de 60 minutos;
 
 * Todas as controllers exigem autenticação;
 
-			Caso o usuário não esteja autenticado, será retornado status 401, caso esteja autenticado mas não tem a policy necessária para acessar o endpoint, será retornado 403
+			Caso o usuário não esteja autenticado, será retornado status 401
 
-* Policy administrator: admin@teste.com.br
-
-* Policy user: usuario@teste.com.br
-
-* Senha default: Teste@123
 
 * Todos os Métodos do verbo GET, possui o final do endPoint: /format.{format}, você pode optar receber os dados em formato json ou xml, Exemplo:
 			
@@ -51,7 +44,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
   Value: Bearer TOKEN_JWT
 
 ### Cadastro de estabelecimento 
-  Para criar um novo estabelecimento, necessário estar autenticado com o usuário com policy administrator, 
+  Para criar um novo estabelecimento, necessário estar autenticado, 
   
   Exemplo de Body:
   
@@ -65,10 +58,9 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
   
     Em caso de sucesso será retornado Status 200.
   
-  Além disso, o usuário com policy de administrator pode ainda: Editar um estabelecimento, Buscar todos os estabelecimentos e Deletar caso ainda não esteja em uso.
-  
+
   ### Cadastro de usuário 
-  Para criar um novo usuário, necessário estar autenticado com o usuário com policy administrator, necessário informar um cnpj já cadastrado, email e senha.
+  Para criar um novo usuário, necessário estar autenticado com o usuário, necessário informar um cnpj já cadastrado, email e senha.
   
   Exemplo de Body:
   
@@ -82,7 +74,7 @@ Enviar um body do tipo JSON com o método POST na controller Login, com os segui
   
 ### Cadastro de veículos
 
-  Para criar um novo veículo, necessário estar autenticado com o usuário com policy user.
+  Para criar um novo veículo, necessário estar autenticado.
   
   #### Importante
   * Você pode escolher entre dois tipos de typeID (1 ou 2).
@@ -106,7 +98,7 @@ Exemplo de Body:
   
   ### Entrada de Veículos
   
-  Para dar entrada de um veículo (carro ou moto), necessário estar autenticado com o usuário com policy user.
+  Para dar entrada de um veículo (carro ou moto), necessário estar autenticado.
   
   #### Importante
   
