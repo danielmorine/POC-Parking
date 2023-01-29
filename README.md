@@ -1,7 +1,7 @@
 # POC-Parking
-Projeto WebAPI em Asp.net Core 3.1
+Projeto WebAPI em Asp.net Core 6.0
 
-* Entity-FrameworkCore InMemory
+* Entity-FrameworkCore
 
 * Autenticação JWT com Identity
 
